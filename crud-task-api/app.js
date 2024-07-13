@@ -109,6 +109,72 @@ app.delete('/tasklists/:tasklistId', (req, res) => {
         .catch((error) => { console.log(error) })
 });
 
+// CRUD operation for task , a task should always belong to a tasklist
+// Get all tasks for 1 task list, http://localhost:3000/tasklists/:tasklistId/tasks
+
+app.get('/tasklists/:tasklistId/tasks', (req, res)=>{
+    Task.find({_taskListId: req.params.tasklistId})
+    .then((taskLists)=>{
+        res.status(200);
+        res.send(taskLists)
+    })
+    .catch((err)=>{console.log(err)});
+})
+
+
+//Create a task inside a particular task list
+app.post('/tasklists/:tasklistId/tasks', (req, res) => {
+    // console.log('Hello this is create request');
+    console.log(req.body);
+    let taskObj = {
+        'title': req.body.title,
+        '_taskListId': req.params.tasklistId
+    };
+    Task(taskObj).save()
+        .then((tasks) => {
+            res.status(201);
+            res.send(tasks);
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+});
+
+// Get one task inside one task list
+app.get('/tasklists/:tasklistId/tasks/:taskId', (req, res)=>{
+    Task.findOne({_taskListId: req.params.tasklistId, _id: req.params.taskId})
+    .then((taskLists)=>{
+        res.status(200);
+        res.send(taskLists)
+    })
+    .catch((err)=>{console.log(err)});
+});
+
+//Update one task belonging to one task list
+app.patch('/tasklists/:tasklistId/tasks/:taskId', (req, res) => {
+    Task.findOneAndUpdate({ _taskListId: req.params.tasklistId, _id: req.params.taskId }, { $set: req.body })
+        .then((task) => {
+            res.status(200);
+            res.send(task);
+        })
+        .catch((error) => { console.log(error) })
+});
+
+//Delete one task belonging to one task list
+app.delete('/tasklists/:tasklistId/tasks/:taskId', (req, res) => {
+    Task.findOneAndDelete({ _taskListId: req.params.tasklistId, _id: req.params.taskId }, { $set: req.body })
+        .then((task) => {
+            res.status(200);
+            res.send(task);
+        })
+        .catch((error) => { console.log(error) })
+});
+
+
+
+// http://localhost:3000/tasklists/:tasklistId/tasks/:taskId
+
+
 app.listen(3000, () => {
     console.log("Server started at 3000");
 });
