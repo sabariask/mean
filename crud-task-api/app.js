@@ -100,14 +100,14 @@ app.patch('/tasklists/:tasklistId', (req, res) => {
 });
 
 //Delete a tasklist by ID
-app.delete('/tasklists/:tasklistId', (req, res) => {
-    TaskList.findByIdAndDelete({ _id: req.params.tasklistId })
-        .then((taskList) => {
-            res.status(200);
-            res.send(taskList);
-        })
-        .catch((error) => { console.log(error) })
-});
+// app.delete('/tasklists/:tasklistId', (req, res) => {
+//     TaskList.findByIdAndDelete({ _id: req.params.tasklistId })
+//         .then((taskList) => {
+//             res.status(200);
+//             res.send(taskList);
+//         })
+//         .catch((error) => { console.log(error) })
+// });
 
 // CRUD operation for task , a task should always belong to a tasklist
 // Get all tasks for 1 task list, http://localhost:3000/tasklists/:tasklistId/tasks
@@ -168,6 +168,28 @@ app.delete('/tasklists/:tasklistId/tasks/:taskId', (req, res) => {
             res.send(task);
         })
         .catch((error) => { console.log(error) })
+});
+
+//Delete a tasklist by ID
+app.delete('/tasklists/:tasklistId', (req, res) => {
+
+    //Delete all tasks within a tasklists if that tasklist is deleted
+
+    const deleteAllContainingtask = (taskList)=>{
+        Task.deleteMany({_taskListId: req.params.tasklistId}).
+        then(()=>{
+            return taskList;
+        })
+        .catch((err)=>{console.log(err)})
+    }
+
+    const responseTaskList = TaskList.findByIdAndDelete(req.params.tasklistId)
+        .then((taskList) => {
+            deleteAllContainingtask(taskList);
+        })
+        .catch((error) => { console.log(error) })
+
+    res.status(204).send(responseTaskList);
 });
 
 
