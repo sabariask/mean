@@ -1,1 +1,57 @@
-<p>task-screen works!</p>
+<div class="container border mt-4">
+  <h2 class="bg-primary p-2 fw-bold text-center">Task Manager App</h2>
+  <div class="row">
+    <div class="col-md-4 col-sm-12">
+      <div class="row">
+        <div class="col-7">
+          <h3 class="fw-bold">Task List</h3>
+        </div>
+        <div class="col-5">
+          <button type="button" routerLink="/create-new-task-list" class="btn btn-success">New Task List</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="list-group">
+            <a
+              [routerLink]="['/task-list', item._id]"
+              routerLinkActive="active"
+              *ngFor="let item of taskLists"
+              class="list-group-item list-group-item-action"
+              aria-current="true"
+            >
+              {{ item.title }}
+              <span (click)="deleteTaskList(item)" class="badge text-bg-danger rounded-pill">x</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8 col-sm-12">
+      <div class="row">
+        <div class="col-10">
+          <h3 class="fw-bold">Linked Task</h3>
+        </div>
+        <div class="col-2">
+          <button type="button" (click)="addNewTask()" class="btn btn-success">New Task</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <ul class="list-group">
+            <li
+              class="list-group-item d-flex justify-content-between align-items-center"
+              *ngFor="let item of tasks"
+              (click)="taskClicked(item)"
+              style="cursor: pointer"
+              [class.mark-completed]="item.completed"
+            >
+              {{ item.title }}
+              <span (click)="deleteTask(item)" class="badge text-bg-danger rounded-pill">x</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

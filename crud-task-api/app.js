@@ -19,7 +19,8 @@ app.use(
     (request, response, next) => {
         response.setHeader('Access-Control-Allow-Origin', '*');
         response.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-        response.setHeader('Access-Control-Allow_Headers', 'X-Requested-With, Content-type, Accept');
+        // response.setHeader('Access-Control-Allow_Headers', 'X-Requested-With, Content-type, Accept');
+        response.setHeader('Access-Control-Allow-Headers', 'Content-type');
         next();
     }
 );
@@ -162,9 +163,9 @@ app.patch('/tasklists/:tasklistId/tasks/:taskId', (req, res) => {
 
 //Delete one task belonging to one task list
 app.delete('/tasklists/:tasklistId/tasks/:taskId', (req, res) => {
-    Task.findOneAndDelete({ _taskListId: req.params.tasklistId, _id: req.params.taskId }, { $set: req.body })
+    Task.findOneAndDelete({ _taskListId: req.params.tasklistId, _id: req.params.taskId })
         .then((task) => {
-            res.status(200);
+            res.status(204);
             res.send(task);
         })
         .catch((error) => { console.log(error) })
